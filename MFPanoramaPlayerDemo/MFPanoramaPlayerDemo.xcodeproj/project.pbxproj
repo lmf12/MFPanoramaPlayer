@@ -16,6 +16,9 @@
 		E82D85FE23D819530034620B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E82D85FD23D819530034620B /* main.m */; };
 		E82D860723D82FF70034620B /* MFPanoramaPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = E82D860623D82FF70034620B /* MFPanoramaPlayer.m */; };
 		E82D861223D893080034620B /* sample.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E82D861123D893080034620B /* sample.mp4 */; };
+		E8633F6D23D99A4B00EF3D55 /* MFPanoramaFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = E8633F6C23D99A4B00EF3D55 /* MFPanoramaFilter.m */; };
+		E8A7A0B123D97FDD008DF6B7 /* MFPanoramaPlayerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = E8A7A0B023D97FDD008DF6B7 /* MFPanoramaPlayerItem.m */; };
+		E8A7A0B423D9880D008DF6B7 /* MFPanoramaVideoCompositing.m in Sources */ = {isa = PBXBuildFile; fileRef = E8A7A0B323D9880D008DF6B7 /* MFPanoramaVideoCompositing.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +37,12 @@
 		E82D860523D82FF70034620B /* MFPanoramaPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MFPanoramaPlayer.h; sourceTree = "<group>"; };
 		E82D860623D82FF70034620B /* MFPanoramaPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MFPanoramaPlayer.m; sourceTree = "<group>"; };
 		E82D861123D893080034620B /* sample.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample.mp4; sourceTree = "<group>"; };
+		E8633F6B23D99A4B00EF3D55 /* MFPanoramaFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MFPanoramaFilter.h; sourceTree = "<group>"; };
+		E8633F6C23D99A4B00EF3D55 /* MFPanoramaFilter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MFPanoramaFilter.m; sourceTree = "<group>"; };
+		E8A7A0AF23D97FDD008DF6B7 /* MFPanoramaPlayerItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MFPanoramaPlayerItem.h; sourceTree = "<group>"; };
+		E8A7A0B023D97FDD008DF6B7 /* MFPanoramaPlayerItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MFPanoramaPlayerItem.m; sourceTree = "<group>"; };
+		E8A7A0B223D9880D008DF6B7 /* MFPanoramaVideoCompositing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MFPanoramaVideoCompositing.h; sourceTree = "<group>"; };
+		E8A7A0B323D9880D008DF6B7 /* MFPanoramaVideoCompositing.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MFPanoramaVideoCompositing.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +97,12 @@
 			children = (
 				E82D860523D82FF70034620B /* MFPanoramaPlayer.h */,
 				E82D860623D82FF70034620B /* MFPanoramaPlayer.m */,
+				E8A7A0AF23D97FDD008DF6B7 /* MFPanoramaPlayerItem.h */,
+				E8A7A0B023D97FDD008DF6B7 /* MFPanoramaPlayerItem.m */,
+				E8A7A0B223D9880D008DF6B7 /* MFPanoramaVideoCompositing.h */,
+				E8A7A0B323D9880D008DF6B7 /* MFPanoramaVideoCompositing.m */,
+				E8633F6B23D99A4B00EF3D55 /* MFPanoramaFilter.h */,
+				E8633F6C23D99A4B00EF3D55 /* MFPanoramaFilter.m */,
 			);
 			name = MFPanoramaPlayer;
 			path = ../MFPanoramaPlayer;
@@ -167,8 +182,11 @@
 				E82D85F323D819530034620B /* ViewController.m in Sources */,
 				E82D85ED23D819530034620B /* AppDelegate.m in Sources */,
 				E82D85FE23D819530034620B /* main.m in Sources */,
+				E8A7A0B123D97FDD008DF6B7 /* MFPanoramaPlayerItem.m in Sources */,
 				E82D860723D82FF70034620B /* MFPanoramaPlayer.m in Sources */,
+				E8633F6D23D99A4B00EF3D55 /* MFPanoramaFilter.m in Sources */,
 				E82D85F023D819530034620B /* SceneDelegate.m in Sources */,
+				E8A7A0B423D9880D008DF6B7 /* MFPanoramaVideoCompositing.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -32,11 +32,10 @@
 - (void)commonInit {
     NSURL *url = [[NSBundle mainBundle] URLForResource:@"sample" withExtension:@"mp4"];
     AVURLAsset *asset = [AVURLAsset assetWithURL:url];
-    AVPlayerItem *playerItem = [[AVPlayerItem alloc] initWithAsset:asset];
+    MFPanoramaPlayerItem *playerItem = [[MFPanoramaPlayerItem alloc] initWithAsset:asset];
     self.panoramaPlayer = [[MFPanoramaPlayer alloc] initWithPlayerItem:playerItem];
     
     self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.panoramaPlayer.player];
-    
     self.playerLayer.frame = CGRectMake(0,
                                         100,
                                         self.view.frame.size.width,

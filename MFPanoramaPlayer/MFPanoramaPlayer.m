@@ -10,18 +10,18 @@
 
 @interface MFPanoramaPlayer ()
 
-@property (nonatomic, strong) AVPlayerItem *playerItem;
+@property (nonatomic, strong) MFPanoramaPlayerItem *playerItem;
 @property (nonatomic, strong, readwrite) AVPlayer *player;
 
 @end
 
 @implementation MFPanoramaPlayer
 
-- (instancetype)initWithPlayerItem:(AVPlayerItem *)item {
+- (instancetype)initWithPlayerItem:(MFPanoramaPlayerItem *)item {
     self = [super init];
     if (self) {
-        self.playerItem = item;
-        self.player = [[AVPlayer alloc] initWithPlayerItem:item];
+        _playerItem = item;
+        _player = [[AVPlayer alloc] initWithPlayerItem:item.playerItem];
     }
     return self;
 }
