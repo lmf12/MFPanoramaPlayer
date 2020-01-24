@@ -14,11 +14,16 @@
 		E82D85F823D819530034620B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E82D85F723D819530034620B /* Assets.xcassets */; };
 		E82D85FB23D819530034620B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E82D85F923D819530034620B /* LaunchScreen.storyboard */; };
 		E82D85FE23D819530034620B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E82D85FD23D819530034620B /* main.m */; };
-		E82D860723D82FF70034620B /* MFPanoramaPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = E82D860623D82FF70034620B /* MFPanoramaPlayer.m */; };
 		E82D861223D893080034620B /* sample.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E82D861123D893080034620B /* sample.mp4 */; };
-		E8633F6D23D99A4B00EF3D55 /* MFPanoramaFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = E8633F6C23D99A4B00EF3D55 /* MFPanoramaFilter.m */; };
-		E8A7A0B123D97FDD008DF6B7 /* MFPanoramaPlayerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = E8A7A0B023D97FDD008DF6B7 /* MFPanoramaPlayerItem.m */; };
-		E8A7A0B423D9880D008DF6B7 /* MFPanoramaVideoCompositing.m in Sources */ = {isa = PBXBuildFile; fileRef = E8A7A0B323D9880D008DF6B7 /* MFPanoramaVideoCompositing.m */; };
+		E8633F7123D9BBB000EF3D55 /* MFShaderHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E8633F6F23D9BBB000EF3D55 /* MFShaderHelper.m */; };
+		E8633F7E23D9BE9800EF3D55 /* YUVConversion.fsh in Resources */ = {isa = PBXBuildFile; fileRef = E8633F7323D9BE9800EF3D55 /* YUVConversion.fsh */; };
+		E8633F7F23D9BE9800EF3D55 /* YUVConversion.vsh in Resources */ = {isa = PBXBuildFile; fileRef = E8633F7423D9BE9800EF3D55 /* YUVConversion.vsh */; };
+		E8633F8023D9BE9800EF3D55 /* MFPanoramaPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = E8633F7823D9BE9800EF3D55 /* MFPanoramaPlayer.m */; };
+		E8633F8123D9BE9800EF3D55 /* MFPanoramaPlayerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = E8633F7923D9BE9800EF3D55 /* MFPanoramaPlayerItem.m */; };
+		E8633F8223D9BE9800EF3D55 /* MFPanoramaVideoCompositing.m in Sources */ = {isa = PBXBuildFile; fileRef = E8633F7B23D9BE9800EF3D55 /* MFPanoramaVideoCompositing.m */; };
+		E8633F8323D9BE9800EF3D55 /* MFPanoramaFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = E8633F7C23D9BE9800EF3D55 /* MFPanoramaFilter.m */; };
+		E8633F8623D9DE3C00EF3D55 /* Panorama.fsh in Resources */ = {isa = PBXBuildFile; fileRef = E8633F8423D9DE3C00EF3D55 /* Panorama.fsh */; };
+		E8633F8723D9DE3C00EF3D55 /* Panorama.vsh in Resources */ = {isa = PBXBuildFile; fileRef = E8633F8523D9DE3C00EF3D55 /* Panorama.vsh */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,15 +39,21 @@
 		E82D85FA23D819530034620B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E82D85FC23D819530034620B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E82D85FD23D819530034620B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		E82D860523D82FF70034620B /* MFPanoramaPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MFPanoramaPlayer.h; sourceTree = "<group>"; };
-		E82D860623D82FF70034620B /* MFPanoramaPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MFPanoramaPlayer.m; sourceTree = "<group>"; };
 		E82D861123D893080034620B /* sample.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample.mp4; sourceTree = "<group>"; };
-		E8633F6B23D99A4B00EF3D55 /* MFPanoramaFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MFPanoramaFilter.h; sourceTree = "<group>"; };
-		E8633F6C23D99A4B00EF3D55 /* MFPanoramaFilter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MFPanoramaFilter.m; sourceTree = "<group>"; };
-		E8A7A0AF23D97FDD008DF6B7 /* MFPanoramaPlayerItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MFPanoramaPlayerItem.h; sourceTree = "<group>"; };
-		E8A7A0B023D97FDD008DF6B7 /* MFPanoramaPlayerItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MFPanoramaPlayerItem.m; sourceTree = "<group>"; };
-		E8A7A0B223D9880D008DF6B7 /* MFPanoramaVideoCompositing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MFPanoramaVideoCompositing.h; sourceTree = "<group>"; };
-		E8A7A0B323D9880D008DF6B7 /* MFPanoramaVideoCompositing.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MFPanoramaVideoCompositing.m; sourceTree = "<group>"; };
+		E8633F6F23D9BBB000EF3D55 /* MFShaderHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MFShaderHelper.m; sourceTree = "<group>"; };
+		E8633F7023D9BBB000EF3D55 /* MFShaderHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MFShaderHelper.h; sourceTree = "<group>"; };
+		E8633F7323D9BE9800EF3D55 /* YUVConversion.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = YUVConversion.fsh; sourceTree = "<group>"; };
+		E8633F7423D9BE9800EF3D55 /* YUVConversion.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = YUVConversion.vsh; sourceTree = "<group>"; };
+		E8633F7623D9BE9800EF3D55 /* MFPanoramaFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MFPanoramaFilter.h; sourceTree = "<group>"; };
+		E8633F7723D9BE9800EF3D55 /* MFPanoramaVideoCompositing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MFPanoramaVideoCompositing.h; sourceTree = "<group>"; };
+		E8633F7823D9BE9800EF3D55 /* MFPanoramaPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MFPanoramaPlayer.m; sourceTree = "<group>"; };
+		E8633F7923D9BE9800EF3D55 /* MFPanoramaPlayerItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MFPanoramaPlayerItem.m; sourceTree = "<group>"; };
+		E8633F7A23D9BE9800EF3D55 /* MFPanoramaPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MFPanoramaPlayer.h; sourceTree = "<group>"; };
+		E8633F7B23D9BE9800EF3D55 /* MFPanoramaVideoCompositing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MFPanoramaVideoCompositing.m; sourceTree = "<group>"; };
+		E8633F7C23D9BE9800EF3D55 /* MFPanoramaFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MFPanoramaFilter.m; sourceTree = "<group>"; };
+		E8633F7D23D9BE9800EF3D55 /* MFPanoramaPlayerItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MFPanoramaPlayerItem.h; sourceTree = "<group>"; };
+		E8633F8423D9DE3C00EF3D55 /* Panorama.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Panorama.fsh; sourceTree = "<group>"; };
+		E8633F8523D9DE3C00EF3D55 /* Panorama.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Panorama.vsh; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,17 +106,47 @@
 		E82D860423D82FE30034620B /* MFPanoramaPlayer */ = {
 			isa = PBXGroup;
 			children = (
-				E82D860523D82FF70034620B /* MFPanoramaPlayer.h */,
-				E82D860623D82FF70034620B /* MFPanoramaPlayer.m */,
-				E8A7A0AF23D97FDD008DF6B7 /* MFPanoramaPlayerItem.h */,
-				E8A7A0B023D97FDD008DF6B7 /* MFPanoramaPlayerItem.m */,
-				E8A7A0B223D9880D008DF6B7 /* MFPanoramaVideoCompositing.h */,
-				E8A7A0B323D9880D008DF6B7 /* MFPanoramaVideoCompositing.m */,
-				E8633F6B23D99A4B00EF3D55 /* MFPanoramaFilter.h */,
-				E8633F6C23D99A4B00EF3D55 /* MFPanoramaFilter.m */,
+				E8633F7523D9BE9800EF3D55 /* Component */,
+				E8633F7223D9BE9800EF3D55 /* Shader */,
+				E8633F6E23D9BBB000EF3D55 /* Utils */,
 			);
 			name = MFPanoramaPlayer;
 			path = ../MFPanoramaPlayer;
+			sourceTree = "<group>";
+		};
+		E8633F6E23D9BBB000EF3D55 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				E8633F7023D9BBB000EF3D55 /* MFShaderHelper.h */,
+				E8633F6F23D9BBB000EF3D55 /* MFShaderHelper.m */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		E8633F7223D9BE9800EF3D55 /* Shader */ = {
+			isa = PBXGroup;
+			children = (
+				E8633F8523D9DE3C00EF3D55 /* Panorama.vsh */,
+				E8633F8423D9DE3C00EF3D55 /* Panorama.fsh */,
+				E8633F7423D9BE9800EF3D55 /* YUVConversion.vsh */,
+				E8633F7323D9BE9800EF3D55 /* YUVConversion.fsh */,
+			);
+			path = Shader;
+			sourceTree = "<group>";
+		};
+		E8633F7523D9BE9800EF3D55 /* Component */ = {
+			isa = PBXGroup;
+			children = (
+				E8633F7A23D9BE9800EF3D55 /* MFPanoramaPlayer.h */,
+				E8633F7823D9BE9800EF3D55 /* MFPanoramaPlayer.m */,
+				E8633F7D23D9BE9800EF3D55 /* MFPanoramaPlayerItem.h */,
+				E8633F7923D9BE9800EF3D55 /* MFPanoramaPlayerItem.m */,
+				E8633F7623D9BE9800EF3D55 /* MFPanoramaFilter.h */,
+				E8633F7C23D9BE9800EF3D55 /* MFPanoramaFilter.m */,
+				E8633F7723D9BE9800EF3D55 /* MFPanoramaVideoCompositing.h */,
+				E8633F7B23D9BE9800EF3D55 /* MFPanoramaVideoCompositing.m */,
+			);
+			path = Component;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -165,6 +206,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E8633F8623D9DE3C00EF3D55 /* Panorama.fsh in Resources */,
+				E8633F7F23D9BE9800EF3D55 /* YUVConversion.vsh in Resources */,
+				E8633F8723D9DE3C00EF3D55 /* Panorama.vsh in Resources */,
+				E8633F7E23D9BE9800EF3D55 /* YUVConversion.fsh in Resources */,
 				E82D85FB23D819530034620B /* LaunchScreen.storyboard in Resources */,
 				E82D85F823D819530034620B /* Assets.xcassets in Resources */,
 				E82D85F623D819530034620B /* Main.storyboard in Resources */,
@@ -179,14 +224,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E8633F8023D9BE9800EF3D55 /* MFPanoramaPlayer.m in Sources */,
 				E82D85F323D819530034620B /* ViewController.m in Sources */,
+				E8633F8323D9BE9800EF3D55 /* MFPanoramaFilter.m in Sources */,
 				E82D85ED23D819530034620B /* AppDelegate.m in Sources */,
 				E82D85FE23D819530034620B /* main.m in Sources */,
-				E8A7A0B123D97FDD008DF6B7 /* MFPanoramaPlayerItem.m in Sources */,
-				E82D860723D82FF70034620B /* MFPanoramaPlayer.m in Sources */,
-				E8633F6D23D99A4B00EF3D55 /* MFPanoramaFilter.m in Sources */,
+				E8633F8223D9BE9800EF3D55 /* MFPanoramaVideoCompositing.m in Sources */,
 				E82D85F023D819530034620B /* SceneDelegate.m in Sources */,
-				E8A7A0B423D9880D008DF6B7 /* MFPanoramaVideoCompositing.m in Sources */,
+				E8633F8123D9BE9800EF3D55 /* MFPanoramaPlayerItem.m in Sources */,
+				E8633F7123D9BBB000EF3D55 /* MFShaderHelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

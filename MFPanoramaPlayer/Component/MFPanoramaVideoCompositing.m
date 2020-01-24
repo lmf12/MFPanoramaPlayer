@@ -14,7 +14,6 @@
 
 @property (nonatomic, strong) dispatch_queue_t renderContextQueue;
 @property (nonatomic, strong) dispatch_queue_t renderingQueue;
-@property (nonatomic, assign) BOOL renderContextDidChange;
 @property (nonatomic, assign) BOOL shouldCancelAllRequests;
 
 @property (nonatomic, strong) AVVideoCompositionRenderContext *renderContext;
@@ -42,7 +41,6 @@
 - (void)renderContextChanged:(AVVideoCompositionRenderContext *)newRenderContext {
     dispatch_sync(self.renderContextQueue, ^{
         self.renderContext = newRenderContext;
-        self.renderContextDidChange = YES;
     });
 }
 
@@ -55,7 +53,6 @@
                 CVPixelBufferRef resultPixels = [self newRenderdPixelBufferForRequest:asyncVideoCompositionRequest];
                 if (resultPixels) {
                     [asyncVideoCompositionRequest finishWithComposedVideoFrame:resultPixels];
-                    CFRelease(resultPixels);
                 } else {
                     NSError *error = [NSError errorWithDomain:@"com.lymamli.panorama.videocompositor" code:0 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Composition request new pixel buffer failed.", nil)}];
                     [asyncVideoCompositionRequest finishWithError:error];
@@ -77,7 +74,7 @@
     self.panoramaFilter.pixelBuffer = pixelBuffer;
     CVPixelBufferRef outputPixelBuffer = self.panoramaFilter.outputPixelBuffer;
     
-    return outputPixelBuffer ?: [self.renderContext newPixelBuffer];
+    return outputPixelBuffer;
 }
 
 - (CVPixelBufferRef)pixelBufferWithRequest:(AVAsynchronousVideoCompositionRequest *)request {
