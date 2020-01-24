@@ -53,6 +53,7 @@
                 CVPixelBufferRef resultPixels = [self newRenderdPixelBufferForRequest:asyncVideoCompositionRequest];
                 if (resultPixels) {
                     [asyncVideoCompositionRequest finishWithComposedVideoFrame:resultPixels];
+                    CVPixelBufferRelease(resultPixels);
                 } else {
                     NSError *error = [NSError errorWithDomain:@"com.lymamli.panorama.videocompositor" code:0 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Composition request new pixel buffer failed.", nil)}];
                     [asyncVideoCompositionRequest finishWithError:error];
@@ -73,6 +74,7 @@
     CVPixelBufferRef pixelBuffer = [self pixelBufferWithRequest:request];
     self.panoramaFilter.pixelBuffer = pixelBuffer;
     CVPixelBufferRef outputPixelBuffer = self.panoramaFilter.outputPixelBuffer;
+    CVPixelBufferRetain(outputPixelBuffer);
     
     return outputPixelBuffer;
 }
