@@ -24,6 +24,7 @@
 		E8633F8323D9BE9800EF3D55 /* MFPanoramaFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = E8633F7C23D9BE9800EF3D55 /* MFPanoramaFilter.m */; };
 		E8633F8623D9DE3C00EF3D55 /* Panorama.fsh in Resources */ = {isa = PBXBuildFile; fileRef = E8633F8423D9DE3C00EF3D55 /* Panorama.fsh */; };
 		E8633F8723D9DE3C00EF3D55 /* Panorama.vsh in Resources */ = {isa = PBXBuildFile; fileRef = E8633F8523D9DE3C00EF3D55 /* Panorama.vsh */; };
+		E8633F8C23DC109F00EF3D55 /* MFPixelBufferHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E8633F8B23DC109F00EF3D55 /* MFPixelBufferHelper.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +55,8 @@
 		E8633F7D23D9BE9800EF3D55 /* MFPanoramaPlayerItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MFPanoramaPlayerItem.h; sourceTree = "<group>"; };
 		E8633F8423D9DE3C00EF3D55 /* Panorama.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Panorama.fsh; sourceTree = "<group>"; };
 		E8633F8523D9DE3C00EF3D55 /* Panorama.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Panorama.vsh; sourceTree = "<group>"; };
+		E8633F8A23DC109F00EF3D55 /* MFPixelBufferHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MFPixelBufferHelper.h; sourceTree = "<group>"; };
+		E8633F8B23DC109F00EF3D55 /* MFPixelBufferHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MFPixelBufferHelper.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +122,8 @@
 			children = (
 				E8633F7023D9BBB000EF3D55 /* MFShaderHelper.h */,
 				E8633F6F23D9BBB000EF3D55 /* MFShaderHelper.m */,
+				E8633F8A23DC109F00EF3D55 /* MFPixelBufferHelper.h */,
+				E8633F8B23DC109F00EF3D55 /* MFPixelBufferHelper.m */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -225,6 +230,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E8633F8023D9BE9800EF3D55 /* MFPanoramaPlayer.m in Sources */,
+				E8633F8C23DC109F00EF3D55 /* MFPixelBufferHelper.m in Sources */,
 				E82D85F323D819530034620B /* ViewController.m in Sources */,
 				E8633F8323D9BE9800EF3D55 /* MFPanoramaFilter.m in Sources */,
 				E82D85ED23D819530034620B /* AppDelegate.m in Sources */,
