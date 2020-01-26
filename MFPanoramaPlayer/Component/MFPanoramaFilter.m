@@ -22,6 +22,11 @@
 
 @property (nonatomic, strong) MFPixelBufferHelper *pixelBufferHelper;
 
+@property (nonatomic, assign) float *vertices;
+@property (nonatomic, assign) int *indices;
+@property (nonatomic, assign) int verticesCount;
+@property (nonatomic, assign) int indicesCount;
+
 @end
 
 @implementation MFPanoramaFilter
@@ -38,6 +43,12 @@
     }
     if (_context) {
         [EAGLContext setCurrentContext:nil];
+    }
+    if (_vertices) {
+        free(_vertices);
+    }
+    if (_indices) {
+        free(_indices);
     }
 }
 
@@ -98,6 +109,8 @@
     [EAGLContext setCurrentContext:self.context];
     [self setupRenderProgram];
     self.pixelBufferHelper = [[MFPixelBufferHelper alloc] initWithContext:self.context];
+    self.vertices = [self createVertices:&_verticesCount];
+    self.indices = [self createIndices:&_indicesCount];
 }
 
 - (void)setupRenderProgram {
@@ -106,13 +119,6 @@
 
 /// 开始渲染视频图像
 - (void)startRendering {
-    float vertices[] = {
-        -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-        -1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-        1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-        1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-    };
-    
     [EAGLContext setCurrentContext:self.context];
     
     CGSize textureSize = [self inputSize];
@@ -139,7 +145,13 @@
     GLuint VBO;
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * self.verticesCount, self.vertices, GL_DYNAMIC_DRAW);
+    
+    // EBO
+    GLuint EBO;
+    glGenBuffers(1, &EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * self.indicesCount, self.indices, GL_DYNAMIC_DRAW);
     
     GLuint positionSlot = glGetAttribLocation(self.renderProgram, "position");
     glEnableVertexAttribArray(positionSlot);
@@ -149,7 +161,7 @@
     glEnableVertexAttribArray(textureSlot);
     glVertexAttribPointer(textureSlot, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3* sizeof(float)));
     
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glDrawElements(GL_TRIANGLES, self.indicesCount, GL_UNSIGNED_INT, 0);
     
     glFlush();
  
@@ -168,6 +180,40 @@
 - (CGSize)inputSize {
     return CGSizeMake(CVPixelBufferGetWidth(self.pixelBuffer),
                       CVPixelBufferGetHeight(self.pixelBuffer));
+}
+
+/// 创建顶点数组
+- (float *)createVertices:(int *)count {
+    float a[] = {-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+                 -1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+                 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+                 1.0f, 1.0f, 0.0f, 1.0f, 1.0f,};
+    
+    float *vertices = malloc(sizeof(float) * 5 * 4);
+    *count = 20;
+    
+    for (int i = 0; i < 20; ++i) {
+        vertices[i] = a[i];
+    }
+    
+    return vertices;
+}
+
+/// 创建索引数组
+- (int *)createIndices:(int *)count {
+    int a[] = {
+        0, 1, 2,
+        1, 2, 3
+    };
+    
+    int *indices = malloc(sizeof(int) * 6);
+    *count = 6;
+    
+    for (int i = 0; i < 6; ++i) {
+        indices[i] = a[i];
+    }
+    
+    return indices;
 }
 
 @end
