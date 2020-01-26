@@ -13,6 +13,8 @@
 
 @import OpenGLES;
 
+static NSInteger const kSizePerVertex = 5;  // 每个顶点的数据量大小
+
 @interface MFPanoramaFilter ()
 
 @property (nonatomic, strong) EAGLContext *context;
@@ -153,6 +155,9 @@
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * self.indicesCount, self.indices, GL_DYNAMIC_DRAW);
     
+    // 深度缓存
+    glEnable(GL_DEPTH_TEST);
+    
     GLuint positionSlot = glGetAttribLocation(self.renderProgram, "position");
     glEnableVertexAttribArray(positionSlot);
     glVertexAttribPointer(positionSlot, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
@@ -161,7 +166,7 @@
     glEnableVertexAttribArray(textureSlot);
     glVertexAttribPointer(textureSlot, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3* sizeof(float)));
     
-    glDrawElements(GL_TRIANGLES, self.indicesCount, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLE_STRIP, self.indicesCount, GL_UNSIGNED_INT, 0);
     
     glFlush();
  
@@ -184,16 +189,45 @@
 
 /// 创建顶点数组
 - (float *)createVertices:(int *)count {
-    float a[] = {-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-                 -1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-                 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-                 1.0f, 1.0f, 0.0f, 1.0f, 1.0f,};
+    int segment = 80;  // 纹理的横向分割数
     
-    float *vertices = malloc(sizeof(float) * 5 * 4);
-    *count = 20;
+    float pointX;
+    float pointY;
+    float pointZ;
+    float textureX;
+    float textureY;
     
-    for (int i = 0; i < 20; ++i) {
-        vertices[i] = a[i];
+    float ballRaduis = 0.8;  // 球体半径
+     
+    float deltaRadian = 2 * M_PI / segment;  // 弧度的增量
+    float deltaTextureX = 1.0 / segment;  // 纹理横向增量
+    float deltaTextureY = 1.0 / (segment / 2);  // 纹理纵向增量
+    
+    int layerNum = segment / 2 + 1;  // 纵向分割数
+    float perLayerNum = segment + 1;  // 每一层的点数
+    
+    *count = kSizePerVertex * perLayerNum * layerNum;
+    
+    float size = sizeof(float) * (*count);
+    float *vertices = malloc(size);
+    memset(vertices, 0x00, size);
+    
+    for (int i = 0; i < layerNum; i++) {
+        pointY = -ballRaduis * cos(deltaRadian * i);
+        float layerRaduis = ballRaduis * sin(deltaRadian * i);
+        for (int j = 0; j < perLayerNum; j++) {
+            pointX = layerRaduis * cos(deltaRadian * j);
+            pointZ = layerRaduis * sin(deltaRadian * j);
+            textureX = deltaTextureX * j;
+            textureY = deltaTextureY * i;
+
+            int index = (i * perLayerNum + j) * kSizePerVertex;
+            vertices[index] = pointX;
+            vertices[index + 1] = pointY;
+            vertices[index + 2] = pointZ;
+            vertices[index + 3] = textureX;
+            vertices[index + 4] = textureY;
+        }
     }
     
     return vertices;
@@ -201,18 +235,29 @@
 
 /// 创建索引数组
 - (int *)createIndices:(int *)count {
-    int a[] = {
-        0, 1, 2,
-        1, 2, 3
-    };
+    int segment = 80;  // 纹理的横向分割数
     
-    int *indices = malloc(sizeof(int) * 6);
-    *count = 6;
+    int perLayerNum = segment + 1;  // 每一层的点数
+    *count = perLayerNum * perLayerNum;
     
-    for (int i = 0; i < 6; ++i) {
-        indices[i] = a[i];
+    int size = sizeof(int) * (*count);
+    int* indices = malloc(size);
+    memset(indices, 0x00, size);
+    
+    int layerNum = segment / 2 + 1;
+    
+    for (int i = 0; i < layerNum; i++) {
+        if (i + 1 < layerNum) {
+            for (int j = 0; j < perLayerNum; j++) {
+                indices[(i * perLayerNum * 2) + (j * 2)] = i * perLayerNum + j;
+                indices[(i * perLayerNum * 2) + (j * 2 + 1)] = (i + 1) * perLayerNum + j;
+            }
+        } else {
+            for (int j = 0; j < perLayerNum; j++) {
+                indices[i * perLayerNum * 2 + j] = i * perLayerNum + j;
+            }
+        }
     }
-    
     return indices;
 }
 
