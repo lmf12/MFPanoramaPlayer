@@ -34,6 +34,7 @@
         _renderContextQueue = dispatch_queue_create("com.lymamli.panorama.rendercontextqueue", 0);
         _renderingQueue = dispatch_queue_create("com.lymamli.panorama.renderingqueue", 0);
         _panoramaFilter = [[MFPanoramaFilter alloc] init];
+        _panoramaFilter.motionEnable = YES;
     }
     return self;
 }

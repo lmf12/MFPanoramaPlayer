@@ -40,7 +40,7 @@
                                         100,
                                         self.view.frame.size.width,
                                         400);
-    self.playerLayer.backgroundColor = [UIColor blackColor].CGColor;
+    self.playerLayer.backgroundColor = [UIColor clearColor].CGColor;
     
     [self.view.layer addSublayer:self.playerLayer];
 }

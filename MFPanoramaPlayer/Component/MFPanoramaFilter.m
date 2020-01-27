@@ -6,6 +6,8 @@
 //  Copyright © 2020 Lyman Li. All rights reserved.
 //
 
+#import <CoreMotion/CoreMotion.h>
+
 #import "MFShaderHelper.h"
 #import "MFPixelBufferHelper.h"
 
@@ -29,6 +31,8 @@ static NSInteger const kSizePerVertex = 5;  // 每个顶点的数据量大小
 @property (nonatomic, assign) int *indices;
 @property (nonatomic, assign) int verticesCount;
 @property (nonatomic, assign) int indicesCount;
+
+@property (nonatomic, strong) CMMotionManager *motionManager;
 
 @end
 
@@ -95,6 +99,25 @@ static NSInteger const kSizePerVertex = 5;  // 每个顶点的数据量大小
     _resultPixelBuffer = resultPixelBuffer;
 }
 
+- (CMMotionManager *)motionManager {
+    if (!_motionManager) {
+        _motionManager = [[CMMotionManager alloc] init];
+    }
+    return _motionManager;
+}
+
+- (void)setMotionEnable:(BOOL)motionEnable {
+    _motionEnable = motionEnable;
+    if (![self.motionManager isDeviceMotionAvailable]) {
+        return;
+    }
+    if (motionEnable) {
+        [self.motionManager startDeviceMotionUpdates];
+    } else {
+        [self.motionManager stopDeviceMotionUpdates];
+    }
+}
+
 #pragma mark - Public
 
 - (CVPixelBufferRef)outputPixelBuffer {
@@ -144,9 +167,19 @@ static NSInteger const kSizePerVertex = 5;  // 每个顶点的数据量大小
     glBindTexture(GL_TEXTURE_2D, inputTextureID);
     glUniform1i(glGetUniformLocation(self.renderProgram, "renderTexture"), 0);
     
+    if (self.motionEnable) {
+        self.angleX = -self.motionManager.deviceMotion.attitude.roll;
+        self.angleY = -self.motionManager.deviceMotion.attitude.pitch;
+    } else {
+        self.angleX = 0;
+        self.angleY = 0;
+    }
+    
     GLfloat aspect = [self inputSize].width / [self inputSize].height;
     GLKMatrix4 matrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(45), aspect, 0.1, 100.f);
-    matrix = GLKMatrix4Rotate(matrix, GLKMathDegreesToRadians(-90), 0, 1, 0);
+
+    matrix = GLKMatrix4Rotate(matrix, self.angleX - M_PI_2, 0, 1, 0);
+    matrix = GLKMatrix4Rotate(matrix, self.angleY + M_PI_2, 0, 0, 1);
     
     glUniformMatrix4fv(glGetUniformLocation(self.renderProgram, "matrix"), 1, GL_FALSE, matrix.m);
     
