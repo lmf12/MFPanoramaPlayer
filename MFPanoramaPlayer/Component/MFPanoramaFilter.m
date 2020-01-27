@@ -12,6 +12,7 @@
 #import "MFPanoramaFilter.h"
 
 @import OpenGLES;
+@import GLKit;
 
 static NSInteger const kSizePerVertex = 5;  // 每个顶点的数据量大小
 
@@ -142,6 +143,12 @@ static NSInteger const kSizePerVertex = 5;  // 每个顶点的数据量大小
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, inputTextureID);
     glUniform1i(glGetUniformLocation(self.renderProgram, "renderTexture"), 0);
+    
+    GLfloat aspect = [self inputSize].width / [self inputSize].height;
+    GLKMatrix4 matrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(45), aspect, 0.1, 100.f);
+    matrix = GLKMatrix4Rotate(matrix, GLKMathDegreesToRadians(-90), 0, 1, 0);
+    
+    glUniformMatrix4fv(glGetUniformLocation(self.renderProgram, "matrix"), 1, GL_FALSE, matrix.m);
     
     // VBO
     GLuint VBO;
