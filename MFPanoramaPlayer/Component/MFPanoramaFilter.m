@@ -18,8 +18,6 @@
 @import OpenGLES;
 @import GLKit;
 
-static NSInteger const kSizePerVertex = 5;  // 每个顶点的数据量大小
-
 @interface MFPanoramaFilter ()
 
 @property (nonatomic, strong) EAGLContext *context;
@@ -30,7 +28,7 @@ static NSInteger const kSizePerVertex = 5;  // 每个顶点的数据量大小
 @property (nonatomic, strong) MFPixelBufferHelper *pixelBufferHelper;
 
 @property (nonatomic, assign) float *vertices;
-@property (nonatomic, assign) int *indices;
+@property (nonatomic, assign) uint16_t *indices;
 @property (nonatomic, assign) int verticesCount;
 @property (nonatomic, assign) int indicesCount;
 
@@ -137,8 +135,13 @@ static NSInteger const kSizePerVertex = 5;  // 每个顶点的数据量大小
     [EAGLContext setCurrentContext:self.context];
     [self setupRenderProgram];
     self.pixelBufferHelper = [[MFPixelBufferHelper alloc] initWithContext:self.context];
-    self.vertices = [self createVertices:&_verticesCount];
-    self.indices = [self createIndices:&_indicesCount];
+    
+    [self genSphereWithSlices:100
+                       radius:1.0
+                     vertices:&_vertices
+                      indices:&_indices
+                verticesCount:&_verticesCount
+                 indicesCount:&_indicesCount];
 }
 
 - (void)setupRenderProgram {
@@ -196,7 +199,7 @@ static NSInteger const kSizePerVertex = 5;  // 每个顶点的数据量大小
     GLuint EBO;
     glGenBuffers(1, &EBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * self.indicesCount, self.indices, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * self.indicesCount, self.indices, GL_DYNAMIC_DRAW);
     
     // 深度缓存
     glEnable(GL_DEPTH_TEST);
@@ -209,7 +212,7 @@ static NSInteger const kSizePerVertex = 5;  // 每个顶点的数据量大小
     glEnableVertexAttribArray(textureSlot);
     glVertexAttribPointer(textureSlot, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3* sizeof(float)));
     
-    glDrawElements(GL_TRIANGLE_STRIP, self.indicesCount, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, self.indicesCount, GL_UNSIGNED_SHORT, 0);
     
     glFlush();
  
@@ -230,78 +233,68 @@ static NSInteger const kSizePerVertex = 5;  // 每个顶点的数据量大小
                       CVPixelBufferGetHeight(self.pixelBuffer));
 }
 
-/// 创建顶点数组
-- (float *)createVertices:(int *)count {
-    int segment = 80;  // 纹理的横向分割数
+/// 生成球体数据
+/// @param slices 分割数，越多越平滑
+/// @param radius 球半径
+/// @param vertices 顶点数组
+/// @param indices 索引数组
+/// @param verticesCount 顶点数组长度
+/// @param indicesCount 索引数组长度
+- (void)genSphereWithSlices:(int)slices
+                     radius:(float)radius
+                   vertices:(float **)vertices
+                    indices:(uint16_t **)indices
+              verticesCount:(int *)verticesCount
+               indicesCount:(int *)indicesCount {
+    int numParallels = slices / 2;
+    int numVertices = (numParallels + 1) * (slices + 1);
+    int numIndices = numParallels * slices * 6;
+    float angleStep = (2.0f * M_PI) / ((float) slices);
     
-    float pointX;
-    float pointY;
-    float pointZ;
-    float textureX;
-    float textureY;
-    
-    float ballRaduis = 0.8;  // 球体半径
-     
-    float deltaRadian = 2 * M_PI / segment;  // 弧度的增量
-    float deltaTextureX = 1.0 / segment;  // 纹理横向增量
-    float deltaTextureY = 1.0 / (segment / 2);  // 纹理纵向增量
-    
-    int layerNum = segment / 2 + 1;  // 纵向分割数
-    float perLayerNum = segment + 1;  // 每一层的点数
-    
-    *count = kSizePerVertex * perLayerNum * layerNum;
-    
-    float size = sizeof(float) * (*count);
-    float *vertices = malloc(size);
-    memset(vertices, 0x00, size);
-    
-    for (int i = 0; i < layerNum; i++) {
-        pointY = -ballRaduis * cos(deltaRadian * i);
-        float layerRaduis = ballRaduis * sin(deltaRadian * i);
-        for (int j = 0; j < perLayerNum; j++) {
-            pointX = layerRaduis * cos(deltaRadian * j);
-            pointZ = layerRaduis * sin(deltaRadian * j);
-            textureX = deltaTextureX * j;
-            textureY = deltaTextureY * i;
-
-            int index = (i * perLayerNum + j) * kSizePerVertex;
-            vertices[index] = pointX;
-            vertices[index + 1] = pointY;
-            vertices[index + 2] = pointZ;
-            vertices[index + 3] = textureX;
-            vertices[index + 4] = textureY;
-        }
+    if (vertices != NULL) {
+        *vertices = malloc(sizeof(float) * 5 * numVertices);
     }
     
-    return vertices;
-}
-
-/// 创建索引数组
-- (int *)createIndices:(int *)count {
-    int segment = 80;  // 纹理的横向分割数
+    if (indices != NULL) {
+        *indices = malloc(sizeof(uint16_t) * numIndices);
+    }
     
-    int perLayerNum = segment + 1;  // 每一层的点数
-    *count = perLayerNum * perLayerNum;
-    
-    int size = sizeof(int) * (*count);
-    int* indices = malloc(size);
-    memset(indices, 0x00, size);
-    
-    int layerNum = segment / 2 + 1;
-    
-    for (int i = 0; i < layerNum; i++) {
-        if (i + 1 < layerNum) {
-            for (int j = 0; j < perLayerNum; j++) {
-                indices[(i * perLayerNum * 2) + (j * 2)] = i * perLayerNum + j;
-                indices[(i * perLayerNum * 2) + (j * 2 + 1)] = (i + 1) * perLayerNum + j;
-            }
-        } else {
-            for (int j = 0; j < perLayerNum; j++) {
-                indices[i * perLayerNum * 2 + j] = i * perLayerNum + j;
+    for (int i = 0; i < numParallels + 1; i++) {
+        for (int j = 0; j < slices + 1; j++) {
+            int vertex = (i * (slices + 1) + j) * 5;
+            
+            if (vertices) {
+                (*vertices)[vertex + 0] = radius * sinf(angleStep * (float)i) * sinf(angleStep * (float)j);
+                (*vertices)[vertex + 1] = radius * cosf(angleStep * (float)i);
+                (*vertices)[vertex + 2] = radius * sinf(angleStep * (float)i) * cosf(angleStep * (float)j);
+                (*vertices)[vertex + 3] = (float)j / (float)slices;
+                (*vertices)[vertex + 4] = 1.0f - ((float)i / (float)numParallels);
             }
         }
     }
-    return indices;
+    
+    // Generate the indices
+    if (indices != NULL) {
+        uint16_t *indexBuf = (*indices);
+        for (int i = 0; i < numParallels ; i++) {
+            for (int j = 0; j < slices; j++) {
+                *indexBuf++ = i * (slices + 1) + j;
+                *indexBuf++ = (i + 1) * (slices + 1) + j;
+                *indexBuf++ = (i + 1) * (slices + 1) + (j + 1);
+                
+                *indexBuf++ = i * (slices + 1) + j;
+                *indexBuf++ = (i + 1) * (slices + 1) + (j + 1);
+                *indexBuf++ = i * (slices + 1) + (j + 1);
+            }
+        }
+    }
+    
+    if (verticesCount) {
+        *verticesCount = numVertices * 5;
+    }
+    if (indicesCount) {
+        *indicesCount = numIndices;
+    }
 }
 
 @end
