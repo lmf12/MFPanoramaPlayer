@@ -31,6 +31,8 @@
 @property (nonatomic, assign) int indicesCount;
 
 @property (nonatomic, strong) CMMotionManager *motionManager;
+@property (nonatomic, assign) GLKQuaternion srcQuaternion;
+@property (nonatomic, assign) GLKQuaternion desQuaternion;
 
 @end
 
@@ -129,6 +131,7 @@
 #pragma mark - Private
 
 - (void)commonInit {
+    self.srcQuaternion = GLKQuaternionIdentity;
     self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     [EAGLContext setCurrentContext:self.context];
     [self setupRenderProgram];
@@ -175,14 +178,7 @@
     matrix = GLKMatrix4Scale(matrix, -1.0f, -1.0f, 1.0f);
     
     if (self.motionEnable) {
-        CMQuaternion quaternion = self.motionManager.deviceMotion.attitude.quaternion;
-        double w = quaternion.w;
-        double wx = quaternion.x;
-        double wy = quaternion.y;
-        double wz = quaternion.z;
-        
-        GLKQuaternion q = GLKQuaternionMake(-wx, wy, wz, w);
-        GLKMatrix4 rotation = GLKMatrix4MakeWithQuaternion(q);
+        GLKMatrix4 rotation = GLKMatrix4MakeWithQuaternion([self currentQuaternion]);
         matrix = GLKMatrix4Multiply(matrix, rotation);
     } else {
         matrix = GLKMatrix4RotateY(matrix, -self.angleX);
@@ -234,6 +230,22 @@
 - (CGSize)inputSize {
     return CGSizeMake(CVPixelBufferGetWidth(self.pixelBuffer),
                       CVPixelBufferGetHeight(self.pixelBuffer));
+}
+
+/// 当前四元数，通过线性插值的方式，使镜头移动更平滑
+- (GLKQuaternion)currentQuaternion {
+    float distance = 0.35;   // 数字越小越平滑，同时移动也更慢
+    
+    CMQuaternion quaternion = self.motionManager.deviceMotion.attitude.quaternion;
+    double w = quaternion.w;
+    double wx = quaternion.x;
+    double wy = quaternion.y;
+    double wz = quaternion.z;
+    self.desQuaternion = GLKQuaternionMake(-wx, wy, wz, w);
+    
+    self.srcQuaternion = GLKQuaternionNormalize(GLKQuaternionSlerp(self.srcQuaternion, self.desQuaternion, distance));
+    
+    return self.srcQuaternion;
 }
 
 /// 生成球体数据
