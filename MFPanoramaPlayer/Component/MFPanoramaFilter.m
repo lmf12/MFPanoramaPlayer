@@ -11,6 +11,8 @@
 #import "MFShaderHelper.h"
 #import "MFPixelBufferHelper.h"
 
+#import "CMAttitude+MFPanoramaPlayer.h"
+
 #import "MFPanoramaFilter.h"
 
 @import OpenGLES;
@@ -168,8 +170,9 @@ static NSInteger const kSizePerVertex = 5;  // 每个顶点的数据量大小
     glUniform1i(glGetUniformLocation(self.renderProgram, "renderTexture"), 0);
     
     if (self.motionEnable) {
-        self.angleX = -self.motionManager.deviceMotion.attitude.roll;
-        self.angleY = -self.motionManager.deviceMotion.attitude.pitch;
+        GLKVector3 eulerianAngle = self.motionManager.deviceMotion.attitude.mf_eulerianAngle;
+        self.angleX = -eulerianAngle.z;
+        self.angleY = -eulerianAngle.x;
     } else {
         self.angleX = 0;
         self.angleY = 0;
@@ -178,8 +181,8 @@ static NSInteger const kSizePerVertex = 5;  // 每个顶点的数据量大小
     GLfloat aspect = [self inputSize].width / [self inputSize].height;
     GLKMatrix4 matrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(45), aspect, 0.1, 100.f);
 
-    matrix = GLKMatrix4Rotate(matrix, self.angleX - M_PI_2, 0, 1, 0);
-    matrix = GLKMatrix4Rotate(matrix, self.angleY + M_PI_2, 0, 0, 1);
+    matrix = GLKMatrix4RotateY(matrix, self.angleX - M_PI_2);
+    matrix = GLKMatrix4RotateZ(matrix, self.angleY + M_PI_2);
     
     glUniformMatrix4fv(glGetUniformLocation(self.renderProgram, "matrix"), 1, GL_FALSE, matrix.m);
     

@@ -25,6 +25,7 @@
 		E8633F8623D9DE3C00EF3D55 /* Panorama.fsh in Resources */ = {isa = PBXBuildFile; fileRef = E8633F8423D9DE3C00EF3D55 /* Panorama.fsh */; };
 		E8633F8723D9DE3C00EF3D55 /* Panorama.vsh in Resources */ = {isa = PBXBuildFile; fileRef = E8633F8523D9DE3C00EF3D55 /* Panorama.vsh */; };
 		E8633F8C23DC109F00EF3D55 /* MFPixelBufferHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E8633F8B23DC109F00EF3D55 /* MFPixelBufferHelper.m */; };
+		E8A4665823E13E9800CB5027 /* CMAttitude+MFPanoramaPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = E8A4665723E13E9800CB5027 /* CMAttitude+MFPanoramaPlayer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +58,8 @@
 		E8633F8523D9DE3C00EF3D55 /* Panorama.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Panorama.vsh; sourceTree = "<group>"; };
 		E8633F8A23DC109F00EF3D55 /* MFPixelBufferHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MFPixelBufferHelper.h; sourceTree = "<group>"; };
 		E8633F8B23DC109F00EF3D55 /* MFPixelBufferHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MFPixelBufferHelper.m; sourceTree = "<group>"; };
+		E8A4665623E13E9800CB5027 /* CMAttitude+MFPanoramaPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CMAttitude+MFPanoramaPlayer.h"; sourceTree = "<group>"; };
+		E8A4665723E13E9800CB5027 /* CMAttitude+MFPanoramaPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CMAttitude+MFPanoramaPlayer.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +115,7 @@
 				E8633F7523D9BE9800EF3D55 /* Component */,
 				E8633F7223D9BE9800EF3D55 /* Shader */,
 				E8633F6E23D9BBB000EF3D55 /* Utils */,
+				E8A4665523E13E6100CB5027 /* Category */,
 			);
 			name = MFPanoramaPlayer;
 			path = ../MFPanoramaPlayer;
@@ -152,6 +156,15 @@
 				E8633F7B23D9BE9800EF3D55 /* MFPanoramaVideoCompositing.m */,
 			);
 			path = Component;
+			sourceTree = "<group>";
+		};
+		E8A4665523E13E6100CB5027 /* Category */ = {
+			isa = PBXGroup;
+			children = (
+				E8A4665623E13E9800CB5027 /* CMAttitude+MFPanoramaPlayer.h */,
+				E8A4665723E13E9800CB5027 /* CMAttitude+MFPanoramaPlayer.m */,
+			);
+			path = Category;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -235,6 +248,7 @@
 				E8633F8323D9BE9800EF3D55 /* MFPanoramaFilter.m in Sources */,
 				E82D85ED23D819530034620B /* AppDelegate.m in Sources */,
 				E82D85FE23D819530034620B /* main.m in Sources */,
+				E8A4665823E13E9800CB5027 /* CMAttitude+MFPanoramaPlayer.m in Sources */,
 				E8633F8223D9BE9800EF3D55 /* MFPanoramaVideoCompositing.m in Sources */,
 				E82D85F023D819530034620B /* SceneDelegate.m in Sources */,
 				E8633F8123D9BE9800EF3D55 /* MFPanoramaPlayerItem.m in Sources */,
