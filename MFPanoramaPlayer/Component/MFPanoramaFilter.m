@@ -11,8 +11,6 @@
 #import "MFShaderHelper.h"
 #import "MFPixelBufferHelper.h"
 
-#import "CMAttitude+MFPanoramaPlayer.h"
-
 #import "MFPanoramaFilter.h"
 
 @import OpenGLES;
@@ -172,21 +170,26 @@
     glBindTexture(GL_TEXTURE_2D, inputTextureID);
     glUniform1i(glGetUniformLocation(self.renderProgram, "renderTexture"), 0);
     
-    if (self.motionEnable) {
-        GLKVector3 eulerianAngle = self.motionManager.deviceMotion.attitude.mf_eulerianAngle;
-        self.angleX = -eulerianAngle.z;
-        self.angleY = -eulerianAngle.x;
-    } else {
-        self.angleX = 0;
-        self.angleY = 0;
-    }
-    
     GLfloat aspect = [self inputSize].width / [self inputSize].height;
     GLKMatrix4 matrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(45), aspect, 0.1, 100.f);
-
-    matrix = GLKMatrix4RotateY(matrix, self.angleX - M_PI_2);
-    matrix = GLKMatrix4RotateZ(matrix, self.angleY + M_PI_2);
+    matrix = GLKMatrix4Scale(matrix, -1.0f, -1.0f, 1.0f);
     
+    if (self.motionEnable) {
+        CMQuaternion quaternion = self.motionManager.deviceMotion.attitude.quaternion;
+        double w = quaternion.w;
+        double wx = quaternion.x;
+        double wy = quaternion.y;
+        double wz = quaternion.z;
+        
+        GLKQuaternion q = GLKQuaternionMake(-wx, wy, wz, w);
+        GLKMatrix4 rotation = GLKMatrix4MakeWithQuaternion(q);
+        matrix = GLKMatrix4Multiply(matrix, rotation);
+    } else {
+        matrix = GLKMatrix4RotateY(matrix, -self.angleX);
+        matrix = GLKMatrix4RotateX(matrix, -self.angleY);
+    }
+    
+    matrix = GLKMatrix4RotateX(matrix, M_PI_2);
     glUniformMatrix4fv(glGetUniformLocation(self.renderProgram, "matrix"), 1, GL_FALSE, matrix.m);
     
     // VBO
