@@ -19,6 +19,8 @@
 @property (nonatomic, assign) GLuint yuvConversionProgram;
 @property (nonatomic, assign) CVOpenGLESTextureCacheRef textureCache;
 
+@property (nonatomic, assign) GLuint VBO;
+
 @property (nonatomic, assign) CVOpenGLESTextureRef luminanceTexture;
 @property (nonatomic, assign) CVOpenGLESTextureRef chrominanceTexture;
 @property (nonatomic, assign) CVOpenGLESTextureRef renderTexture;
@@ -43,6 +45,9 @@
     if (_yuvConversionProgram) {
         glDeleteProgram(_yuvConversionProgram);
     }
+    if (_VBO) {
+        glDeleteBuffers(1, &_VBO);
+    }
 }
 
 - (instancetype)initWithContext:(EAGLContext *)context {
@@ -50,6 +55,7 @@
     if (self) {
         _context = context;
         [self setupYUVConversionProgram];
+        [self setupVBO];
     }
     return self;
 }
@@ -133,13 +139,6 @@
     if (!pixelBuffer) {
         return 0;
     }
-    
-    float vertices[] = {
-        -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-        -1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-        1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-        1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-    };
     
     CGSize textureSize = CGSizeMake(CVPixelBufferGetWidth(pixelBuffer),
                                     CVPixelBufferGetHeight(pixelBuffer));
@@ -230,10 +229,7 @@
     glUniformMatrix3fv(yuvConversionMatrixUniform, 1, GL_FALSE, kXDXPreViewColorConversion601FullRange);
     
     // VBO
-    GLuint VBO;
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, self.VBO);
     
     GLuint positionSlot = glGetAttribLocation(self.yuvConversionProgram, "position");
     glEnableVertexAttribArray(positionSlot);
@@ -246,7 +242,6 @@
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     
     glDeleteFramebuffers(1, &frameBuffer);
-    glDeleteBuffers(1, &VBO);
     
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -297,6 +292,19 @@
 
 - (void)setupYUVConversionProgram {
     self.yuvConversionProgram = [MFShaderHelper programWithShaderName:@"YUVConversion"];
+}
+
+- (void)setupVBO {
+    float vertices[] = {
+        -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+        -1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+        1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+        1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+    };
+    
+    glGenBuffers(1, &_VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 }
 
 @end

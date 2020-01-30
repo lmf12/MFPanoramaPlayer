@@ -30,6 +30,9 @@
 @property (nonatomic, assign) int verticesCount;
 @property (nonatomic, assign) int indicesCount;
 
+@property (nonatomic, assign) GLuint VBO;
+@property (nonatomic, assign) GLuint EBO;
+
 @property (nonatomic, strong) CMMotionManager *motionManager;
 @property (nonatomic, assign) GLKQuaternion srcQuaternion;
 @property (nonatomic, assign) GLKQuaternion desQuaternion;
@@ -47,6 +50,12 @@
     }
     if (_renderProgram) {
         glDeleteProgram(_renderProgram);
+    }
+    if (_VBO) {
+        glDeleteBuffers(1, &_VBO);
+    }
+    if (_EBO) {
+        glDeleteBuffers(1, &_EBO);
     }
     if (_context) {
         [EAGLContext setCurrentContext:nil];
@@ -143,10 +152,24 @@
                       indices:&_indices
                 verticesCount:&_verticesCount
                  indicesCount:&_indicesCount];
+    [self setupVBO];
+    [self setupEBO];
 }
 
 - (void)setupRenderProgram {
     self.renderProgram = [MFShaderHelper programWithShaderName:@"Panorama"];
+}
+
+- (void)setupVBO {
+    glGenBuffers(1, &_VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * self.verticesCount, self.vertices, GL_STATIC_DRAW);
+}
+
+- (void)setupEBO {
+    glGenBuffers(1, &_EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * self.indicesCount, self.indices, GL_STATIC_DRAW);
 }
 
 /// 开始渲染视频图像
@@ -189,16 +212,10 @@
     glUniformMatrix4fv(glGetUniformLocation(self.renderProgram, "matrix"), 1, GL_FALSE, matrix.m);
     
     // VBO
-    GLuint VBO;
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * self.verticesCount, self.vertices, GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, self.VBO);
     
     // EBO
-    GLuint EBO;
-    glGenBuffers(1, &EBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * self.indicesCount, self.indices, GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.EBO);
     
     // 深度缓存
     glEnable(GL_DEPTH_TEST);
@@ -218,8 +235,6 @@
     self.resultPixelBuffer = outputPixelBuffer;
     
     glDeleteFramebuffers(1, &frameBuffer);
-    glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
     glDeleteTextures(1, &inputTextureID);
     CVPixelBufferRelease(outputPixelBuffer);
     
