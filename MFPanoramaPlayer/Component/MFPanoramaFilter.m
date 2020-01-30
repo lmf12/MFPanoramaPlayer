@@ -219,12 +219,13 @@
     
     glDeleteFramebuffers(1, &frameBuffer);
     glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
     glDeleteTextures(1, &inputTextureID);
     CVPixelBufferRelease(outputPixelBuffer);
     
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 - (CGSize)inputSize {
