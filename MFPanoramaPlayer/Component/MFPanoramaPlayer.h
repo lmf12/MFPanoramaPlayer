@@ -10,13 +10,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MFPanoramaPlayer : NSObject
+@interface MFPanoramaPlayer : AVPlayer
 
-@property (nonatomic, strong, readonly) AVPlayer *player;
-
-- (instancetype)initWithPlayerItem:(MFPanoramaPlayerItem *)item;
-
-- (void)play;
+- (instancetype)initWithPanoramaPlayerItem:(MFPanoramaPlayerItem *)item;
 
 @end
 

@@ -33,9 +33,9 @@
     NSURL *url = [[NSBundle mainBundle] URLForResource:@"sample" withExtension:@"mp4"];
     AVURLAsset *asset = [AVURLAsset assetWithURL:url];
     MFPanoramaPlayerItem *playerItem = [[MFPanoramaPlayerItem alloc] initWithAsset:asset];
-    self.panoramaPlayer = [[MFPanoramaPlayer alloc] initWithPlayerItem:playerItem];
+    self.panoramaPlayer = [[MFPanoramaPlayer alloc] initWithPanoramaPlayerItem:playerItem];
     
-    self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.panoramaPlayer.player];
+    self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.panoramaPlayer];
     self.playerLayer.frame = CGRectMake(0,
                                         100,
                                         self.view.frame.size.width,
