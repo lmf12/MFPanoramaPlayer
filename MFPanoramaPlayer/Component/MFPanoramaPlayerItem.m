@@ -85,4 +85,12 @@
     }
 }
 
+- (void)setPerspective:(CGFloat)perspective {
+    _perspective = perspective;
+    NSArray *instructions = self.videoComposition.instructions;
+    for (MFPanoramaVideoCompositionInstruction *instruction in instructions) {
+        instruction.perspective = perspective;
+    }
+}
+
 @end

@@ -70,4 +70,9 @@
     self.panoramaFilter.motionEnable = motionEnable;
 }
 
+- (void)setPerspective:(CGFloat)perspective {
+    _perspective = perspective;
+    self.panoramaFilter.perspective = perspective;
+}
+
 @end

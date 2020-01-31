@@ -16,6 +16,10 @@
 @import OpenGLES;
 @import GLKit;
 
+static CGFloat const kDefaultPerspective = 45.0;  // 默认视角大小
+static CGFloat const kMaxPerspective = 100.0;   // 最大视角
+static CGFloat const kMinPerspective = 30.0;   // 最小视角
+
 @interface MFPanoramaFilter ()
 
 @property (nonatomic, strong) EAGLContext *context;
@@ -141,6 +145,7 @@
 
 - (void)commonInit {
     self.srcQuaternion = GLKQuaternionIdentity;
+    self.perspective = kDefaultPerspective;
     self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     [EAGLContext setCurrentContext:self.context];
     [self setupRenderProgram];
@@ -197,7 +202,8 @@
     glUniform1i(glGetUniformLocation(self.renderProgram, "renderTexture"), 0);
     
     GLfloat aspect = [self inputSize].width / [self inputSize].height;
-    GLKMatrix4 matrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(45), aspect, 0.1, 100.f);
+    CGFloat perspective = MIN(MAX(self.perspective, kMinPerspective), kMaxPerspective);
+    GLKMatrix4 matrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(perspective), aspect, 0.1, 100.f);
     matrix = GLKMatrix4Scale(matrix, -1.0f, -1.0f, 1.0f);
     
     if (self.motionEnable) {

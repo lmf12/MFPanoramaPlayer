@@ -21,6 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 是否启动设备角度检测，默认 NO
 @property (nonatomic, assign) BOOL motionEnable;
 
+/// 视角大小，角度越大，视野内的图像越大，30 ~ 100，默认 45
+@property (nonatomic, assign) CGFloat perspective;
+
 - (CVPixelBufferRef)outputPixelBuffer;
 
 @end

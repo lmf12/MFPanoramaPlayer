@@ -23,6 +23,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *yLabel;
 @property (weak, nonatomic) IBOutlet UISlider *xSlider;
 @property (weak, nonatomic) IBOutlet UISlider *ySlider;
+@property (weak, nonatomic) IBOutlet UISlider *perspectiveSlider;
 
 @end
 
@@ -50,6 +51,7 @@
 - (void)setupUI {
     [self setupPlayButton];
     [self setupModeButton];
+    [self setupPerspectiveSlider];
 }
 
 - (void)setupPlayButton {
@@ -88,6 +90,10 @@
                                         400);
     self.playerLayer.backgroundColor = [UIColor clearColor].CGColor;
     [self.view.layer addSublayer:self.playerLayer];
+}
+
+- (void)setupPerspectiveSlider {
+    self.perspectiveSlider.value = 15.0 / 70;  // 根据默认值初始化 UI
 }
 
 - (void)configButton:(UIButton *)button {
@@ -168,6 +174,11 @@
 - (IBAction)ySliderValueChangedAction:(UISlider *)slider {
     CGFloat value = slider.value;
     self.playerItem.angleY = value * 2 * M_PI;
+}
+
+- (IBAction)perspectiveSliderValueChangedAction:(UISlider *)slider {
+    CGFloat value = slider.value;
+    self.playerItem.perspective = 30 + value * (100 - 30);
 }
 
 @end
