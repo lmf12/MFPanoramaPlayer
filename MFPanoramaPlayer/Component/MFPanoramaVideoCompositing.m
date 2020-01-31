@@ -6,9 +6,8 @@
 //  Copyright © 2020 Lyman Li. All rights reserved.
 //
 
-#import "MFPanoramaFilter.h"
-
 #import "MFPanoramaVideoCompositing.h"
+#import "MFPanoramaVideoCompositionInstruction.h"
 
 @interface MFPanoramaVideoCompositing ()
 
@@ -17,7 +16,6 @@
 @property (nonatomic, assign) BOOL shouldCancelAllRequests;
 
 @property (nonatomic, strong) AVVideoCompositionRenderContext *renderContext;
-@property (nonatomic, strong) MFPanoramaFilter *panoramaFilter;
 
 @end
 
@@ -33,8 +31,6 @@
 
         _renderContextQueue = dispatch_queue_create("com.lymamli.panorama.rendercontextqueue", 0);
         _renderingQueue = dispatch_queue_create("com.lymamli.panorama.renderingqueue", 0);
-        _panoramaFilter = [[MFPanoramaFilter alloc] init];
-        _panoramaFilter.motionEnable = YES;
     }
     return self;
 }
@@ -72,20 +68,14 @@
 }
 
 - (CVPixelBufferRef)newRenderdPixelBufferForRequest:(AVAsynchronousVideoCompositionRequest *)request {
-    CVPixelBufferRef pixelBuffer = [self pixelBufferWithRequest:request];
-    self.panoramaFilter.pixelBuffer = pixelBuffer;
-    CVPixelBufferRef outputPixelBuffer = self.panoramaFilter.outputPixelBuffer;
-    CVPixelBufferRetain(outputPixelBuffer);
-    
-    return outputPixelBuffer;
-}
-
-- (CVPixelBufferRef)pixelBufferWithRequest:(AVAsynchronousVideoCompositionRequest *)request {
-    AVVideoCompositionInstruction *videoCompositionInstruction = (AVVideoCompositionInstruction *)request.videoCompositionInstruction;
+    MFPanoramaVideoCompositionInstruction *videoCompositionInstruction = (MFPanoramaVideoCompositionInstruction *)request.videoCompositionInstruction;
     NSArray<AVVideoCompositionLayerInstruction *> *layerInstructions = videoCompositionInstruction.layerInstructions;
     CMPersistentTrackID trackID = layerInstructions.firstObject.trackID;
     
-    return [request sourceFrameByTrackID:trackID];
+    CVPixelBufferRef sourcePixelBuffer = [request sourceFrameByTrackID:trackID];
+    CVPixelBufferRef resultPixelBuffer = [videoCompositionInstruction applyPixelBuffer:sourcePixelBuffer];
+    
+    return resultPixelBuffer;
 }
 
 @end

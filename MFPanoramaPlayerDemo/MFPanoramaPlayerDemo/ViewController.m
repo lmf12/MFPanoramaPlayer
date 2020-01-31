@@ -13,6 +13,7 @@
 @interface ViewController ()
 
 @property (nonatomic, strong) MFPanoramaPlayer *panoramaPlayer;
+@property (nonatomic, strong) MFPanoramaPlayerItem *playerItem;
 @property (nonatomic, strong) AVPlayerLayer *playerLayer;
 
 @property (weak, nonatomic) IBOutlet UIButton *playButton;
@@ -64,10 +65,14 @@
 }
 
 - (void)setupPlayer {
+    // playerItem
     NSURL *url = [[NSBundle mainBundle] URLForResource:@"sample" withExtension:@"mp4"];
     AVURLAsset *asset = [AVURLAsset assetWithURL:url];
-    MFPanoramaPlayerItem *playerItem = [[MFPanoramaPlayerItem alloc] initWithAsset:asset];
-    self.panoramaPlayer = [[MFPanoramaPlayer alloc] initWithPanoramaPlayerItem:playerItem];
+    self.playerItem = [[MFPanoramaPlayerItem alloc] initWithAsset:asset];
+    self.playerItem.motionEnable = YES;
+    
+    // panoramaPlayer
+    self.panoramaPlayer = [[MFPanoramaPlayer alloc] initWithPanoramaPlayerItem:self.playerItem];
     __weak ViewController * weakSelf = self;
     [self.panoramaPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1, NSEC_PER_SEC)
                                                       queue:NULL
@@ -75,6 +80,7 @@
         [weakSelf updateProgressView];
     }];
     
+    // playerLayer
     self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.panoramaPlayer];
     self.playerLayer.frame = CGRectMake(0,
                                         100,
@@ -140,13 +146,28 @@
 - (IBAction)modeAction:(UIButton *)button {
     button.selected = !button.selected;
     [self updateUI];
+    if (button.selected) {
+        self.playerItem.motionEnable = NO;
+    } else {
+        self.playerItem.motionEnable = YES;
+    }
 }
 
-- (IBAction)sliderValueChangedAction:(UISlider *)slider {
+- (IBAction)progressSliderValueChangedAction:(UISlider *)slider {
     CGFloat value = slider.value;
     CMTime duration = self.panoramaPlayer.currentItem.duration;
     CMTime currentTime = CMTimeMake(duration.value * value, duration.timescale);
     [self.panoramaPlayer seekToTime:currentTime];
+}
+
+- (IBAction)xSliderValueChangedAction:(UISlider *)slider {
+    CGFloat value = slider.value;
+    self.playerItem.angleX = value * 2 * M_PI;
+}
+
+- (IBAction)ySliderValueChangedAction:(UISlider *)slider {
+    CGFloat value = slider.value;
+    self.playerItem.angleY = value * 2 * M_PI;
 }
 
 @end

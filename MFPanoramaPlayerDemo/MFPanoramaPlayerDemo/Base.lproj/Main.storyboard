@@ -31,7 +31,7 @@
                                 <rect key="frame" x="18" y="652" width="378" height="31"/>
                                 <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <connections>
-                                    <action selector="sliderValueChangedAction:" destination="BYZ-38-t0r" eventType="valueChanged" id="Hts-74-jKD"/>
+                                    <action selector="progressSliderValueChangedAction:" destination="BYZ-38-t0r" eventType="valueChanged" id="VAE-Ua-KIJ"/>
                                 </connections>
                             </slider>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wfd-Q4-KLS">
@@ -60,10 +60,16 @@
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="AGf-0I-nhl">
                                 <rect key="frame" x="120" y="772.5" width="276" height="31"/>
                                 <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <connections>
+                                    <action selector="xSliderValueChangedAction:" destination="BYZ-38-t0r" eventType="valueChanged" id="TQH-wy-33r"/>
+                                </connections>
                             </slider>
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="pjl-w1-UTK">
                                 <rect key="frame" x="119" y="813.5" width="277" height="31"/>
                                 <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <connections>
+                                    <action selector="ySliderValueChangedAction:" destination="BYZ-38-t0r" eventType="valueChanged" id="mht-Ex-asB"/>
+                                </connections>
                             </slider>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
