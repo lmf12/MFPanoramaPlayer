@@ -16,6 +16,8 @@
 @property (nonatomic, strong, readwrite) MFPanoramaPlayerItem *currentItem;
 @property (nonatomic, assign, readwrite) MFPanoramaPlayerState state;
 
+@property (nonatomic, assign) BOOL isSeeking;
+
 @end
 
 @implementation MFPanoramaPlayer
@@ -36,11 +38,26 @@
 #pragma mark - Public
 
 - (void)seekToTime:(CMTime)time {
-    [self.player seekToTime:time];
+    [self seekToTime:time completionHandler:^(BOOL finished) {
+    }];
 }
 
 - (void)seekToTime:(CMTime)time completionHandler:(void (^)(BOOL))completionHandler {
-    [self.player seekToTime:time completionHandler:completionHandler];
+    if (self.isSeeking) {
+        if (completionHandler) {
+            completionHandler(NO);
+        }
+        return;
+    }
+    self.isSeeking = YES;
+    __weak typeof(self) weakSelf = self;
+    [self.player seekToTime:time completionHandler:^(BOOL finished) {
+        __strong typeof(self) strongSelf = weakSelf;
+        strongSelf.isSeeking = NO;
+        if (completionHandler) {
+            completionHandler(finished);
+        }
+    }];
 }
 
 - (void)play {
