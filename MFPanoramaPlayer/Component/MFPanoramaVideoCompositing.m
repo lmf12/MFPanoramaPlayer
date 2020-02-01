@@ -6,6 +6,8 @@
 //  Copyright © 2020 Lyman Li. All rights reserved.
 //
 
+#import <CoreImage/CoreImage.h>
+
 #import "MFPanoramaVideoCompositing.h"
 #import "MFPanoramaVideoCompositionInstruction.h"
 
@@ -16,6 +18,7 @@
 @property (nonatomic, assign) BOOL shouldCancelAllRequests;
 
 @property (nonatomic, strong) AVVideoCompositionRenderContext *renderContext;
+@property (nonatomic, strong) CIContext *ciContext;
 
 @end
 
@@ -54,6 +57,7 @@
                 } else {
                     NSError *error = [NSError errorWithDomain:@"com.lymamli.panorama.videocompositor" code:0 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Composition request new pixel buffer failed.", nil)}];
                     [asyncVideoCompositionRequest finishWithError:error];
+                    NSLog(@"%@", error);
                 }
             }
         }
@@ -67,6 +71,8 @@
     });
 }
 
+#pragma mark - Private
+
 - (CVPixelBufferRef)newRenderdPixelBufferForRequest:(AVAsynchronousVideoCompositionRequest *)request {
     MFPanoramaVideoCompositionInstruction *videoCompositionInstruction = (MFPanoramaVideoCompositionInstruction *)request.videoCompositionInstruction;
     NSArray<AVVideoCompositionLayerInstruction *> *layerInstructions = videoCompositionInstruction.layerInstructions;
@@ -74,8 +80,30 @@
     
     CVPixelBufferRef sourcePixelBuffer = [request sourceFrameByTrackID:trackID];
     CVPixelBufferRef resultPixelBuffer = [videoCompositionInstruction applyPixelBuffer:sourcePixelBuffer];
-    
-    return resultPixelBuffer;
+        
+    if (!resultPixelBuffer) {
+        CVPixelBufferRef emptyPixelBuffer = [self createEmptyPixelBuffer];
+        return emptyPixelBuffer;
+    } else {
+        return resultPixelBuffer;
+    }
+}
+
+/// 创建一个空白的视频帧
+- (CVPixelBufferRef)createEmptyPixelBuffer {
+    CVPixelBufferRef pixelBuffer = [self.renderContext newPixelBuffer];
+    CIImage *image = [CIImage imageWithColor:[CIColor colorWithRed:0 green:0 blue:0 alpha:0]];
+    [self.ciContext render:image toCVPixelBuffer:pixelBuffer];
+    return pixelBuffer;
+}
+
+#pragma mark - Accessors
+
+- (CIContext *)ciContext {
+    if (!_ciContext) {
+        _ciContext = [[CIContext alloc] init];
+    }
+    return _ciContext;
 }
 
 @end
