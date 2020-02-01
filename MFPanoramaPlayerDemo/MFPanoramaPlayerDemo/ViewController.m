@@ -10,7 +10,7 @@
 
 #import "ViewController.h"
 
-@interface ViewController ()
+@interface ViewController () <MFPanoramaPlayerDelegate>
 
 @property (nonatomic, strong) MFPanoramaPlayer *panoramaPlayer;
 @property (nonatomic, strong) MFPanoramaPlayerItem *playerItem;
@@ -29,10 +29,6 @@
 
 @implementation ViewController
 
-- (void)dealloc {
-    [self removeObservers];
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -44,7 +40,6 @@
 - (void)commonInit {
     [self setupUI];
     [self setupPlayer];
-    [self addObservers];
     [self updateUI];
 }
 
@@ -78,15 +73,10 @@
     
     // panoramaPlayer
     self.panoramaPlayer = [[MFPanoramaPlayer alloc] initWithPanoramaPlayerItem:self.playerItem];
-    __weak ViewController * weakSelf = self;
-    [self.panoramaPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1, NSEC_PER_SEC)
-                                                      queue:NULL
-                                                 usingBlock:^(CMTime time) {
-        [weakSelf updateProgressView];
-    }];
+    self.panoramaPlayer.delegate = self;
     
     // playerLayer
-    self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.panoramaPlayer];
+    self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.panoramaPlayer.player];
     self.playerLayer.frame = CGRectMake(0,
                                         100,
                                         self.view.frame.size.width,
@@ -111,20 +101,9 @@
     if (self.progressSlider.isHighlighted) {
         return;
     }
-    NSTimeInterval duration = CMTimeGetSeconds(self.panoramaPlayer.currentItem.duration);
-    CGFloat progress = CMTimeGetSeconds(self.panoramaPlayer.currentItem.currentTime) / duration;
+    NSTimeInterval duration = CMTimeGetSeconds(self.panoramaPlayer.duration);
+    CGFloat progress = CMTimeGetSeconds(self.panoramaPlayer.currentTime) / duration;
     self.progressSlider.value = progress;
-}
-
-- (void)addObservers {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(playerItemDidReachEnd)
-                                                 name:AVPlayerItemDidPlayToEndTimeNotification
-                                               object:self.panoramaPlayer.currentItem];
-}
-
-- (void)removeObservers {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)playerItemDidReachEnd {
@@ -145,10 +124,11 @@
 - (IBAction)playAction:(UIButton *)button {
     if (button.isSelected) {
         [self.panoramaPlayer pause];
+        button.selected = NO;
     } else {
         [self.panoramaPlayer play];
+        button.selected = YES;
     }
-    button.selected = !button.selected;
 }
 
 - (IBAction)modeAction:(UIButton *)button {
@@ -163,7 +143,7 @@
 
 - (IBAction)progressSliderValueChangedAction:(UISlider *)slider {
     CGFloat value = slider.value;
-    CMTime duration = self.panoramaPlayer.currentItem.duration;
+    CMTime duration = self.panoramaPlayer.duration;
     CMTime currentTime = CMTimeMake(duration.value * value, duration.timescale);
     [self.panoramaPlayer seekToTime:currentTime];
 }
@@ -181,6 +161,21 @@
 - (IBAction)perspectiveSliderValueChangedAction:(UISlider *)slider {
     CGFloat value = slider.value;
     self.playerItem.perspective = 30 + value * (100 - 30);
+}
+
+#pragma mark - MFPanoramaPlayerDelegate
+
+- (void)player:(MFPanoramaPlayer *)player stateDidChanged:(MFPanoramaPlayerState)currentState {
+    if (currentState != MFPanoramaPlayerStatePlaying) {
+        self.playButton.selected = NO;
+    }
+    if (currentState == MFPanoramaPlayerStateFinished) {
+        [self playerItemDidReachEnd];
+    }
+}
+
+- (void)player:(MFPanoramaPlayer *)player currentTimeDidChanged:(CMTime)currentTime {
+    [self updateProgressView];
 }
 
 @end
