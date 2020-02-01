@@ -18,6 +18,8 @@
 
 @property (nonatomic, strong) AVMutableVideoComposition *videoComposition;
 
+@property (nonatomic, assign, readwrite) CGSize originRenderSize;
+
 @end
 
 @implementation MFPanoramaPlayerItem
@@ -26,22 +28,27 @@
     self = [super init];
     if (self) {
         _asset = asset;
-        [self setupPlayerItem];
+        [self setupVideoComposition];
+        [self resetPlayerItem];
     }
     return self;
 }
 
 #pragma mark - Private
 
-- (void)setupPlayerItem {
+- (void)setupVideoComposition {
     self.videoComposition = [self createVideoCompositionWithAsset:self.asset];
     self.videoComposition.customVideoCompositorClass = [MFPanoramaVideoCompositing class];
+}
+
+- (void)resetPlayerItem {
     self.playerItem = [[AVPlayerItem alloc] initWithAsset:self.asset];
     self.playerItem.videoComposition = self.videoComposition;
 }
 
 - (AVMutableVideoComposition *)createVideoCompositionWithAsset:(AVAsset *)asset {
     AVMutableVideoComposition *videoComposition = [AVMutableVideoComposition videoCompositionWithPropertiesOfAsset:asset];
+    self.originRenderSize = videoComposition.renderSize;
     NSArray *instructions = videoComposition.instructions;
     NSMutableArray *newInstructions = [NSMutableArray array];
     for (AVVideoCompositionInstruction *instruction in instructions) {
@@ -91,6 +98,19 @@
     for (MFPanoramaVideoCompositionInstruction *instruction in instructions) {
         instruction.perspective = perspective;
     }
+}
+
+- (void)setRenderSize:(CGSize)renderSize {
+    if (CGSizeEqualToSize(renderSize, CGSizeZero)) {
+        renderSize = self.originRenderSize;
+    }
+    _renderSize = renderSize;
+    NSArray *instructions = self.videoComposition.instructions;
+    for (MFPanoramaVideoCompositionInstruction *instruction in instructions) {
+        instruction.renderSize = renderSize;
+    }
+    self.videoComposition.renderSize = renderSize;
+    [self resetPlayerItem];
 }
 
 @end

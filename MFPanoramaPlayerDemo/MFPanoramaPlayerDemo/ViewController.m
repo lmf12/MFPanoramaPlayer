@@ -72,6 +72,9 @@
     AVURLAsset *asset = [AVURLAsset assetWithURL:url];
     self.playerItem = [[MFPanoramaPlayerItem alloc] initWithAsset:asset];
     self.playerItem.motionEnable = YES;
+    CGFloat renderHeight = self.playerItem.originRenderSize.height / 2;
+    CGSize renderSize = CGSizeMake(renderHeight * 4.0 / 3, renderHeight);
+    self.playerItem.renderSize = renderSize;
     
     // panoramaPlayer
     self.panoramaPlayer = [[MFPanoramaPlayer alloc] initWithPanoramaPlayerItem:self.playerItem];
@@ -87,8 +90,7 @@
     self.playerLayer.frame = CGRectMake(0,
                                         100,
                                         self.view.frame.size.width,
-                                        400);
-    self.playerLayer.backgroundColor = [UIColor clearColor].CGColor;
+                                        self.view.frame.size.width * 3.0 / 4);
     [self.view.layer addSublayer:self.playerLayer];
 }
 

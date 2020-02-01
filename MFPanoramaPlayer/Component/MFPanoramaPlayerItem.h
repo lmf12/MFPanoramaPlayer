@@ -25,6 +25,11 @@ NS_ASSUME_NONNULL_BEGIN
 /// 视角大小，角度越大，视野内的图像越大，30 ~ 100，默认 45
 @property (nonatomic, assign) CGFloat perspective;
 
+/// 初始的尺寸
+@property (nonatomic, assign, readonly) CGSize originRenderSize;
+/// 实际渲染尺寸，不设置则使用 originRenderSize
+@property (nonatomic, assign) CGSize renderSize;
+
 - (instancetype)initWithAsset:(AVAsset *)asset;
 
 @end

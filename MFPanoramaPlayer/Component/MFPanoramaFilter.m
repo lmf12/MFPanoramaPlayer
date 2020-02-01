@@ -181,7 +181,7 @@ static CGFloat const kMinPerspective = 30.0;   // 最小视角
 - (void)startRendering {
     [EAGLContext setCurrentContext:self.context];
     
-    CGSize textureSize = [self inputSize];
+    CGSize textureSize = [self outputSize];
     GLuint inputTextureID = [self.pixelBufferHelper convertYUVPixelBufferToTexture:self.pixelBuffer];
     CVPixelBufferRef outputPixelBuffer = [self.pixelBufferHelper createPixelBufferWithSize:textureSize];
     GLuint outputTextureID = [self.pixelBufferHelper convertRGBPixelBufferToTexture:outputPixelBuffer];
@@ -193,7 +193,7 @@ static CGFloat const kMinPerspective = 30.0;   // 最小视角
         
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, outputTextureID, 0);
     
-    glViewport(0, 0, [self inputSize].width, [self inputSize].height);
+    glViewport(0, 0, [self outputSize].width, [self outputSize].height);
     
     // program
     glUseProgram(self.renderProgram);
@@ -201,7 +201,7 @@ static CGFloat const kMinPerspective = 30.0;   // 最小视角
     glBindTexture(GL_TEXTURE_2D, inputTextureID);
     glUniform1i(glGetUniformLocation(self.renderProgram, "renderTexture"), 0);
     
-    GLfloat aspect = [self inputSize].width / [self inputSize].height;
+    GLfloat aspect = [self outputSize].width / [self outputSize].height;
     CGFloat perspective = MIN(MAX(self.perspective, kMinPerspective), kMaxPerspective);
     GLKMatrix4 matrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(perspective), aspect, 0.1, 100.f);
     matrix = GLKMatrix4Scale(matrix, -1.0f, -1.0f, 1.0f);
@@ -249,9 +249,13 @@ static CGFloat const kMinPerspective = 30.0;   // 最小视角
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-- (CGSize)inputSize {
-    return CGSizeMake(CVPixelBufferGetWidth(self.pixelBuffer),
-                      CVPixelBufferGetHeight(self.pixelBuffer));
+- (CGSize)outputSize {
+    if (CGSizeEqualToSize(self.renderSize, CGSizeZero)) {
+        return CGSizeMake(CVPixelBufferGetWidth(self.pixelBuffer),
+        CVPixelBufferGetHeight(self.pixelBuffer));
+    } else {
+        return self.renderSize;
+    }
 }
 
 /// 当前四元数，通过线性插值的方式，使镜头移动更平滑

@@ -34,6 +34,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 视角大小，角度越大，视野内的图像越大，30 ~ 100，默认 45
 @property (nonatomic, assign) CGFloat perspective;
 
+/// 实际渲染尺寸，不设置则使用原始尺寸
+@property (nonatomic, assign) CGSize renderSize;
+
 /// 处理 pixelBuffer，并返回结果
 - (CVPixelBufferRef)applyPixelBuffer:(CVPixelBufferRef)pixelBuffer;
 

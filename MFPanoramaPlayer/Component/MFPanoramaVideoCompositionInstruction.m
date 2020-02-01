@@ -47,6 +47,9 @@
 #pragma mark - Public
 
 - (CVPixelBufferRef)applyPixelBuffer:(CVPixelBufferRef)pixelBuffer {
+    if (!CGSizeEqualToSize(self.renderSize, CGSizeZero)) {
+        self.panoramaFilter.renderSize = self.renderSize;
+    }
     self.panoramaFilter.pixelBuffer = pixelBuffer;
     CVPixelBufferRef outputPixelBuffer = self.panoramaFilter.outputPixelBuffer;
     CVPixelBufferRetain(outputPixelBuffer);
@@ -73,6 +76,11 @@
 - (void)setPerspective:(CGFloat)perspective {
     _perspective = perspective;
     self.panoramaFilter.perspective = perspective;
+}
+
+- (void)setRenderSize:(CGSize)renderSize {
+    _renderSize = renderSize;
+    self.panoramaFilter.renderSize = renderSize;
 }
 
 @end
