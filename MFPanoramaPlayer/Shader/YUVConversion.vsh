@@ -4,5 +4,5 @@ varying vec2 textureCoordinate;
 
 void main (void) {
     textureCoordinate = inputTextureCoordinate;
-    gl_Position = vec4(position.x, -position.y, position.z, 1.0);
+    gl_Position = vec4(position.x, position.y, position.z, 1.0);
 }
