@@ -79,4 +79,8 @@ playerLayer.frame = CGRectMake(0,
 
 `originRenderSize` 表示视频资源的原始尺寸，`renderSize` 表示我们最终期望的渲染尺寸。
 
+## 更多介绍
+
+[使用 OpenGL ES 实现全景播放器](http://www.lymanli.com/2020/03/21/ios-opengles-panorama/)
+
 
