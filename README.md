@@ -1,4 +1,4 @@
-<div align=center><img src="https://raw.githubusercontent.com/lmf12/MFPanoramaPlayer/master/image/title.jpg" width="550"/></div>
+<div align=center><img src="https://github.com/lmf12/ImageHost/blob/master/MFPanoramaPlayer/title.jpg" width="550"/></div>
 
 # 简介
 
@@ -8,11 +8,11 @@
 
 假设我们有一个全景视频：
 
-![](https://raw.githubusercontent.com/lmf12/MFPanoramaPlayer/master/image/image2.gif)
+![](https://github.com/lmf12/ImageHost/blob/master/MFPanoramaPlayer/image2.gif)
 
 那么，它播放起来的效果是这样的:
 
-![](https://raw.githubusercontent.com/lmf12/MFPanoramaPlayer/master/image/image1.gif)
+![](https://github.com/lmf12/ImageHost/blob/master/MFPanoramaPlayer/image1.gif)
 
 **它还可以根据手机的倾斜角度自动调节视角。**
 
